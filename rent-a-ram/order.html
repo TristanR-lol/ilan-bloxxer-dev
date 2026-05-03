@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Order RAM — RentARAM</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div id="nav-placeholder"></div>
+
+<div class="page" style="max-width:580px;">
+
+  <div style="margin-bottom:36px;">
+    <div class="badge" style="margin-bottom:16px;">SECURE CHECKOUT (TRUST US)</div>
+    <h2 style="font-family:'Orbitron',monospace;font-size:28px;font-weight:900;">Place Your <span style="color:var(--red)">Order</span></h2>
+    <p class="mid" style="font-size:12px;margin-top:8px;line-height:1.7;">Fill in the form below. Your RAM will be allocated instantly. Payment is charged immediately and is non-refundable under any circumstances including fire, flood, or realising this was a terrible idea.</p>
+  </div>
+
+  <!-- Step 1: Config -->
+  <div class="card" style="margin-bottom:16px;">
+    <div class="card-title">01 — CONFIGURE YOUR RAM</div>
+
+    <div class="form-row">
+      <label>RAM AMOUNT: <span class="hl mono" id="gb-label">8 GB</span></label>
+      <input type="range" min="1" max="256" value="8" step="1" id="gb">
+    </div>
+
+    <div class="form-row">
+      <label>RAM TYPE</label>
+      <select id="ram-type">
+        <option value="ddr4">DDR4 — Standard (cheap, reliable-ish)</option>
+        <option value="ddr5">DDR5 — Premium (+$20/GB/hr surcharge)</option>
+        <option value="ddr3">DDR3 — Legacy (we dig it out of storage)</option>
+        <option value="ecc">ECC — Error-correcting (for paranoid people)</option>
+      </select>
+    </div>
+
+    <div class="form-row">
+      <label>DURATION: <span class="hl mono" id="hr-label">4 HOURS</span></label>
+      <input type="range" min="1" max="720" value="4" step="1" id="hr">
+    </div>
+
+    <div class="form-row">
+      <label>DELIVERY REGION</label>
+      <select id="region">
+        <option>Europe (London DC)</option>
+        <option>US East (New Jersey garage)</option>
+        <option>US West (someone's Tesla)</option>
+        <option>Asia Pacific (Raspberry Pi, Singapore)</option>
+        <option>Africa (coming soon, probably)</option>
+      </select>
+    </div>
+  </div>
+
+  <!-- Step 2: Details -->
+  <div class="card" style="margin-bottom:16px;">
+    <div class="card-title">02 — YOUR DETAILS</div>
+    <div class="form-row">
+      <label>FULL NAME</label>
+      <input type="text" id="name" placeholder="e.g. Greg Memoryleak">
+    </div>
+    <div class="form-row">
+      <label>EMAIL</label>
+      <input type="email" id="email" placeholder="e.g. greg@example.com">
+    </div>
+    <div class="form-row">
+      <label>REASON FOR RENTING (optional, we're just curious)</label>
+      <select id="reason">
+        <option>— select a reason —</option>
+        <option>Forgot to buy RAM</option>
+        <option>Too lazy to buy RAM</option>
+        <option>Want to feel something</option>
+        <option>Running Chrome with 200 tabs</option>
+        <option>Corporate expense account (lucky you)</option>
+        <option>Lost a bet</option>
+        <option>I genuinely don't know</option>
+      </select>
+    </div>
+  </div>
+
+  <!-- Step 3: Payment -->
+  <div class="card" style="margin-bottom:16px;">
+    <div class="card-title">03 — PAYMENT</div>
+    <div class="form-row">
+      <label>CARD NUMBER</label>
+      <input type="text" id="card" placeholder="•••• •••• •••• ••••" maxlength="19">
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+      <div class="form-row">
+        <label>EXPIRY</label>
+        <input type="text" placeholder="MM/YY" maxlength="5">
+      </div>
+      <div class="form-row">
+        <label>CVV</label>
+        <input type="text" placeholder="•••" maxlength="3">
+      </div>
+    </div>
+    <p class="dim" style="font-size:10px;line-height:1.8;">Your card details are transmitted over HTTPS and stored in a spreadsheet on the intern's desktop. Just kidding. (We use a Google Form.)</p>
+  </div>
+
+  <!-- Summary -->
+  <div style="background:rgba(0,255,136,0.05);border:1px solid var(--border2);padding:20px;margin-bottom:20px;">
+    <div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:8px;">
+      <span class="mid">RAM rental</span><span id="s-ram">8 GB × 4 hrs</span>
+    </div>
+    <div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:8px;">
+      <span class="mid">Rate</span><span>$100/GB/hr</span>
+    </div>
+    <div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:8px;">
+      <span class="mid">Type surcharge</span><span id="s-surcharge">$0</span>
+    </div>
+    <hr class="divider" style="margin:12px 0;">
+    <div style="display:flex;justify-content:space-between;align-items:baseline;">
+      <span class="mid" style="font-size:11px;letter-spacing:2px;">TOTAL</span>
+      <span style="font-family:'Orbitron',monospace;font-size:28px;font-weight:900;" id="s-total">$3,200</span>
+    </div>
+  </div>
+
+  <button class="btn btn-primary btn-block" onclick="placeOrder()" style="padding:18px;font-size:14px;letter-spacing:3px;">
+    CONFIRM &amp; PAY
+  </button>
+
+  <p class="dim" style="font-size:10px;text-align:center;margin-top:12px;line-height:1.8;">
+    By clicking above you agree to our Terms of Service, Privacy Policy, and accept that this was probably a mistake.
+  </p>
+
+</div>
+
+<div id="footer-placeholder"></div>
+<script src="main.js"></script>
+<script>
+  const gbEl = document.getElementById('gb');
+  const hrEl = document.getElementById('hr');
+  const typeEl = document.getElementById('ram-type');
+
+  const surcharges = { ddr4: 0, ddr5: 20, ddr3: -10, ecc: 50 };
+
+  function update() {
+    const gb = +gbEl.value;
+    const hr = +hrEl.value;
+    const surcharge = surcharges[typeEl.value] || 0;
+    document.getElementById('gb-label').textContent = gb + ' GB';
+    document.getElementById('hr-label').textContent = hr + (hr === 1 ? ' HOUR' : ' HOURS');
+    const base = calcTotal(gb, hr);
+    const extra = surcharge * gb * hr;
+    const total = base + extra;
+    document.getElementById('s-ram').textContent = gb + ' GB × ' + hr + ' hr' + (hr > 1 ? 's' : '');
+    document.getElementById('s-surcharge').textContent = surcharge === 0 ? '$0' : formatMoney(extra) + ' (' + (surcharge > 0 ? '+' : '') + '$' + surcharge + '/GB/hr)';
+    document.getElementById('s-total').textContent = formatMoney(total);
+  }
+
+  gbEl.addEventListener('input', update);
+  hrEl.addEventListener('input', update);
+  typeEl.addEventListener('change', update);
+
+  // Pre-fill from URL params
+  const params = new URLSearchParams(location.search);
+  if (params.get('gb')) gbEl.value = params.get('gb');
+  if (params.get('hr')) hrEl.value = params.get('hr');
+  update();
+
+  // Card number formatting
+  document.getElementById('card').addEventListener('input', function() {
+    this.value = this.value.replace(/\D/g,'').replace(/(.{4})/g,'$1 ').trim();
+  });
+
+  function placeOrder() {
+    const name = document.getElementById('name').value.trim();
+    const email = document.getElementById('email').value.trim();
+    const card = document.getElementById('card').value.trim();
+    if (!name || !email || card.length < 19) {
+      toast('⚠ Please fill in all required fields.');
+      return;
+    }
+    const gb = +gbEl.value;
+    const hr = +hrEl.value;
+    const surcharge = surcharges[typeEl.value] || 0;
+    const total = calcTotal(gb, hr) + surcharge * gb * hr;
+    const id = saveOrder({
+      gb, hr, type: typeEl.value, region: document.getElementById('region').value,
+      name, email, total,
+      reason: document.getElementById('reason').value
+    });
+    toast('Order ' + id + ' placed! RAM incoming...');
+    setTimeout(() => { window.location.href = 'dashboard.html'; }, 1800);
+  }
+</script>
+</body>
+</html>

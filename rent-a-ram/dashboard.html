@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard — RentARAM</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div id="nav-placeholder"></div>
+
+<div class="page-wide">
+
+  <div style="display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:32px;flex-wrap:wrap;gap:12px;">
+    <div>
+      <div class="badge" style="margin-bottom:10px;">CUSTOMER PORTAL</div>
+      <h2 style="font-family:'Orbitron',monospace;font-size:28px;font-weight:900;">Your <span style="color:var(--red)">Rentals</span></h2>
+    </div>
+    <a href="order.html" class="btn btn-primary">+ NEW RENTAL</a>
+  </div>
+
+  <!-- Summary metrics -->
+  <div class="metrics" id="metrics-bar">
+    <div class="metric">
+      <div class="metric-val" id="m-orders">0</div>
+      <div class="metric-label">TOTAL ORDERS</div>
+    </div>
+    <div class="metric">
+      <div class="metric-val yellow" id="m-spent">$0</div>
+      <div class="metric-label">TOTAL SPENT</div>
+    </div>
+    <div class="metric">
+      <div class="metric-val" id="m-gb">0 GB</div>
+      <div class="metric-label">GB EVER RENTED</div>
+    </div>
+    <div class="metric">
+      <div class="metric-val red">$0</div>
+      <div class="metric-label">REFUNDS RECEIVED</div>
+    </div>
+  </div>
+
+  <!-- Orders table -->
+  <div class="card" style="margin-bottom:32px;">
+    <div class="card-title">ACTIVE & PAST RENTALS</div>
+    <div id="orders-wrap">
+      <div id="empty-state" style="text-align:center;padding:48px 0;">
+        <div style="font-size:32px;margin-bottom:12px;">💾</div>
+        <div class="mid" style="font-size:12px;line-height:1.8;">No rentals yet.<br>You're either very wise or very boring.</div>
+        <a href="order.html" class="btn" style="margin-top:20px;display:inline-block;">RENT SOME RAM</a>
+      </div>
+      <div id="orders-table" style="display:none;overflow-x:auto;">
+        <table>
+          <thead>
+            <tr>
+              <th>ORDER ID</th>
+              <th>RAM</th>
+              <th>TYPE</th>
+              <th>DURATION</th>
+              <th>REGION</th>
+              <th>TOTAL</th>
+              <th>STATUS</th>
+              <th>PLACED</th>
+            </tr>
+          </thead>
+          <tbody id="orders-body"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- System status -->
+  <div class="section-title">SYSTEM STATUS</div>
+  <div class="grid-3" style="margin-bottom:48px;">
+    <div class="card" style="text-align:center;">
+      <div style="font-size:11px;letter-spacing:2px;color:var(--text-dim);margin-bottom:8px;">LONDON DC</div>
+      <span class="status status-active">OPERATIONAL</span>
+      <div class="dim" style="font-size:10px;margin-top:10px;" id="ping-lon">ping: -- ms</div>
+    </div>
+    <div class="card" style="text-align:center;">
+      <div style="font-size:11px;letter-spacing:2px;color:var(--text-dim);margin-bottom:8px;">NEW JERSEY GARAGE</div>
+      <span class="status status-active">OPERATIONAL</span>
+      <div class="dim" style="font-size:10px;margin-top:10px;" id="ping-nj">ping: -- ms</div>
+    </div>
+    <div class="card" style="text-align:center;">
+      <div style="font-size:11px;letter-spacing:2px;color:var(--text-dim);margin-bottom:8px;">SWINDON PI</div>
+      <span class="status status-pending">DEGRADED</span>
+      <div class="dim" style="font-size:10px;margin-top:10px;">the intern tripped on the cable</div>
+    </div>
+  </div>
+
+  <!-- Usage graph (fake) -->
+  <div class="section-title">GLOBAL USAGE (LIVE)</div>
+  <div class="card" style="margin-bottom:48px;">
+    <canvas id="usage-chart" height="120" style="width:100%;display:block;"></canvas>
+  </div>
+
+</div>
+
+<div id="footer-placeholder"></div>
+<script src="main.js"></script>
+<script>
+  function renderOrders() {
+    const orders = getOrders();
+    document.getElementById('m-orders').textContent = orders.length;
+    const spent = orders.reduce((a, o) => a + o.total, 0);
+    document.getElementById('m-spent').textContent = formatMoney(spent);
+    const gb = orders.reduce((a, o) => a + o.gb * o.hr, 0);
+    document.getElementById('m-gb').textContent = gb.toLocaleString() + ' GB·h';
+
+    if (orders.length === 0) return;
+
+    document.getElementById('empty-state').style.display = 'none';
+    document.getElementById('orders-table').style.display = 'block';
+
+    const tbody = document.getElementById('orders-body');
+    tbody.innerHTML = '';
+    orders.forEach(o => {
+      const d = new Date(o.placedAt);
+      const tr = document.createElement('tr');
+      tr.innerHTML = `
+        <td class="hl mono" style="font-size:11px;">${o.id}</td>
+        <td>${o.gb} GB</td>
+        <td class="dim">${(o.type || 'ddr4').toUpperCase()}</td>
+        <td>${o.hr} hr${o.hr > 1 ? 's' : ''}</td>
+        <td class="dim" style="font-size:11px;">${(o.region || '').split('(')[0].trim()}</td>
+        <td class="hl-yellow mono">${formatMoney(o.total)}</td>
+        <td><span class="status status-active">${o.status}</span></td>
+        <td class="dim" style="font-size:11px;">${d.toLocaleTimeString()}</td>
+      `;
+      tbody.appendChild(tr);
+    });
+  }
+
+  renderOrders();
+
+  // Fake ping
+  function fakePing(id, base) {
+    const el = document.getElementById(id);
+    setInterval(() => {
+      const ms = base + Math.floor(Math.random() * 20 - 10);
+      el.textContent = 'ping: ' + ms + ' ms';
+    }, 2000);
+  }
+  fakePing('ping-lon', 12);
+  fakePing('ping-nj', 87);
+
+  // Fake usage sparkline
+  const canvas = document.getElementById('usage-chart');
+  const ctx = canvas.getContext('2d');
+  const W = () => canvas.offsetWidth;
+  const H = 120;
+  let points = Array.from({length:60}, () => Math.random() * 0.6 + 0.2);
+
+  function drawChart() {
+    canvas.width = canvas.offsetWidth;
+    ctx.clearRect(0, 0, canvas.width, H);
+    const step = canvas.width / (points.length - 1);
+    ctx.beginPath();
+    ctx.moveTo(0, H - points[0] * H);
+    points.forEach((p, i) => ctx.lineTo(i * step, H - p * H));
+    ctx.strokeStyle = '#00ff88';
+    ctx.lineWidth = 1.5;
+    ctx.stroke();
+    ctx.lineTo(canvas.width, H);
+    ctx.lineTo(0, H);
+    ctx.closePath();
+    ctx.fillStyle = 'rgba(0,255,136,0.07)';
+    ctx.fill();
+  }
+
+  setInterval(() => {
+    points.shift();
+    points.push(Math.random() * 0.6 + 0.2);
+    drawChart();
+  }, 800);
+
+  drawChart();
+  window.addEventListener('resize', drawChart);
+</script>
+</body>
+</html>

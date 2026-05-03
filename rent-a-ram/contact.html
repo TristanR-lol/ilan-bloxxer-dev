@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Contact — RentARAM</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div id="nav-placeholder"></div>
+
+<div class="hero" style="padding-bottom:40px;">
+  <div class="badge">GET IN TOUCH</div>
+  <h1>We're <span>Listening.</span></h1>
+  <p>Mostly. Our support team consists of one intern and a trained parrot. Response times vary.</p>
+</div>
+
+<div class="page-wide" style="max-width:860px;">
+
+  <div class="grid-2" style="margin-top:48px;align-items:start;gap:32px;">
+
+    <!-- Contact form -->
+    <div class="card">
+      <div class="card-title">SEND A MESSAGE</div>
+
+      <div class="form-row">
+        <label>YOUR NAME</label>
+        <input type="text" id="c-name" placeholder="What do we call you?">
+      </div>
+      <div class="form-row">
+        <label>EMAIL</label>
+        <input type="email" id="c-email" placeholder="Where should we not reply?">
+      </div>
+      <div class="form-row">
+        <label>SUBJECT</label>
+        <select id="c-subject">
+          <option>— choose a topic —</option>
+          <option>I want a refund</option>
+          <option>I have a complaint</option>
+          <option>The RAM isn't working</option>
+          <option>The RAM is working but I'm not happy</option>
+          <option>I accidentally rented 256GB for a week</option>
+          <option>General confusion</option>
+          <option>I'd like to invest</option>
+          <option>Other (please don't)</option>
+        </select>
+      </div>
+      <div class="form-row">
+        <label>MESSAGE</label>
+        <textarea id="c-message" rows="5" placeholder="Tell us everything. We probably can't help but we'll read it."></textarea>
+      </div>
+      <div class="form-row">
+        <label>PRIORITY</label>
+        <select id="c-priority">
+          <option value="low">Low — no rush, really</option>
+          <option value="normal" selected>Normal — whenever</option>
+          <option value="high">High — please hurry (+$99 priority fee)</option>
+          <option value="urgent">URGENT — the RAM is on fire (£499 fee)</option>
+        </select>
+      </div>
+
+      <button class="btn btn-primary btn-block" onclick="submitContact()" style="margin-top:8px;">
+        SEND MESSAGE
+      </button>
+    </div>
+
+    <!-- Contact info -->
+    <div>
+      <div class="card" style="margin-bottom:16px;">
+        <div class="card-title">SUPPORT CHANNELS</div>
+        <div style="font-size:12px;color:var(--text-mid);line-height:2.4;">
+          <div>📧 <span class="hl">support@rentaram.fake</span></div>
+          <div class="dim" style="font-size:11px;margin-bottom:8px;">Response time: 3–15 business days</div>
+          <div>📞 <span class="hl">0800-RENTRAM</span></div>
+          <div class="dim" style="font-size:11px;margin-bottom:8px;">Mon–Fri, 10am–10:15am GMT</div>
+          <div>💬 <span class="hl">Live chat</span></div>
+          <div class="dim" style="font-size:11px;margin-bottom:8px;">Staffed by the parrot. He knows three words.</div>
+          <div>🐦 <span class="hl">@RentARAM</span></div>
+          <div class="dim" style="font-size:11px;">We post memes and ignore DMs.</div>
+        </div>
+      </div>
+
+      <div class="card" style="margin-bottom:16px;">
+        <div class="card-title">OFFICE LOCATIONS</div>
+        <div style="font-size:12px;color:var(--text-mid);line-height:1.9;">
+          <div class="hl" style="margin-bottom:2px;">London HQ</div>
+          <div class="dim">A WeWork hot desk we share with three other startups. Tuesdays only.</div>
+          <hr class="divider">
+          <div class="hl" style="margin-bottom:2px;">New Jersey</div>
+          <div class="dim">Barry's garage. Do not visit unannounced.</div>
+          <hr class="divider">
+          <div class="hl" style="margin-bottom:2px;">Swindon</div>
+          <div class="dim">The cupboard. No visitors.</div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-title">KNOWN ISSUES</div>
+        <div style="font-size:11px;color:var(--text-mid);line-height:2.2;">
+          <div><span class="status status-pending" style="margin-right:8px;">KNOWN</span> Swindon Pi intermittently offline</div>
+          <div><span class="status status-pending" style="margin-right:8px;">KNOWN</span> DDR3 shipments delayed</div>
+          <div><span class="status status-active" style="margin-right:8px;">FIXED</span> Billing charged twice (it wasn't, you just forgot)</div>
+          <div><span class="status status-active" style="margin-right:8px;">WONTFIX</span> Price is too high</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+</div>
+
+<div id="footer-placeholder"></div>
+<script src="main.js"></script>
+<script>
+  const replies = {
+    'I want a refund': "Thank you for your message. After careful review, no.",
+    'I have a complaint': "We've logged your complaint in our complaints register (a Post-it note). It has been acknowledged.",
+    'The RAM isn\'t working': "Have you tried turning it off and on again? If you do that, it will be off. Then on. Please report back.",
+    'The RAM is working but I\'m not happy': "We're sorry to hear you're not happy. Unfortunately, happiness is not included in the rental price.",
+    'I accidentally rented 256GB for a week': "We're truly sorry. We are also very grateful. Your order funds our intern's lunch for the next six months.",
+    'General confusion': "You have come to the right place. We are also confused.",
+    'I\'d like to invest': "Excellent. Please wire funds to our holding company. We will send you a certificate.",
+  };
+
+  function submitContact() {
+    const name = document.getElementById('c-name').value.trim();
+    const email = document.getElementById('c-email').value.trim();
+    const subject = document.getElementById('c-subject').value;
+    const msg = document.getElementById('c-message').value.trim();
+
+    if (!name || !email || subject.startsWith('—') || !msg) {
+      toast('⚠ Please fill in all fields.');
+      return;
+    }
+
+    const priority = document.getElementById('c-priority').value;
+    if (priority === 'high') {
+      toast('Priority fee of $99 charged. We will now read your email first.');
+    } else if (priority === 'urgent') {
+      toast('URGENT fee charged. The parrot has been briefed.');
+    } else {
+      const auto = replies[subject] || "Thank you for your message. It has been received and placed at the bottom of a very long queue.";
+      toast(auto);
+    }
+
+    setTimeout(() => {
+      document.getElementById('c-name').value = '';
+      document.getElementById('c-email').value = '';
+      document.getElementById('c-message').value = '';
+    }, 1500);
+  }
+</script>
+</body>
+</html>

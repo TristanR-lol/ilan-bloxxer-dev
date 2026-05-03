@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FAQ — RentARAM</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    .faq-item { border-bottom: 1px solid var(--border); }
+    .faq-q {
+      width: 100%; background: none; border: none; color: var(--green);
+      font-family: 'Share Tech Mono', monospace; font-size: 13px; text-align: left;
+      padding: 20px 0; cursor: pointer; display: flex; justify-content: space-between;
+      align-items: center; letter-spacing: 1px;
+    }
+    .faq-q:hover { color: #fff; }
+    .faq-arrow { font-size: 16px; transition: transform 0.2s; flex-shrink: 0; }
+    .faq-a { font-size: 12px; color: var(--text-mid); line-height: 1.9; padding-bottom: 20px; display: none; }
+    .faq-item.open .faq-arrow { transform: rotate(90deg); }
+    .faq-item.open .faq-a { display: block; }
+  </style>
+</head>
+<body>
+
+<div id="nav-placeholder"></div>
+
+<div class="hero" style="padding-bottom:40px;">
+  <div class="badge">FREQUENTLY ASKED QUESTIONS</div>
+  <h1>You Have <span>Concerns.</span></h1>
+  <p>We understand. Renting RAM is an unusual life choice. Here are answers to the questions we get most often.</p>
+</div>
+
+<div class="page">
+
+  <div class="section-title" style="margin-top:48px;">GENERAL</div>
+
+  <div id="faq-list"></div>
+
+  <div style="text-align:center;margin-top:48px;">
+    <p class="mid" style="font-size:12px;margin-bottom:16px;">Still confused? Good. That's the intended experience.</p>
+    <a href="contact.html" class="btn">CONTACT US ANYWAY</a>
+  </div>
+
+</div>
+
+<div id="footer-placeholder"></div>
+<script src="main.js"></script>
+<script>
+  const faqs = [
+    {
+      q: "Why would I rent RAM instead of just buying it?",
+      a: "Excellent question. You wouldn't. RAM costs about $3–5 per GB to buy. We charge $100 per GB per hour. The only rational explanation is that you're running a one-hour experiment, lost a bet, or have a corporate card you want to abuse."
+    },
+    {
+      q: "Is this real?",
+      a: "Philosophically speaking, what is real? Our website is real. Our prices are real. Whether the RAM you receive is real is a question best left to your OS's memory diagnostics tool."
+    },
+    {
+      q: "What happens when my rental expires?",
+      a: "Your RAM is deallocated. Any processes using it will crash. We recommend saving your work at least 72 hours before expiry, just to be safe. We send no reminders."
+    },
+    {
+      q: "Can I extend my rental?",
+      a: "Yes. Place a new order and we'll provision fresh RAM. Continuity between old and new RAM is not guaranteed. In fact, nothing is guaranteed."
+    },
+    {
+      q: "Do you offer refunds?",
+      a: "No. This is stated clearly in: the homepage, the pricing page, the order page, the checkout button label, the confirmation email subject line, and this FAQ. We have thought very hard about refunds and our answer remains no."
+    },
+    {
+      q: "What RAM types do you offer?",
+      a: "DDR4 (standard), DDR5 (premium, +$20/GB/hr), DDR3 (legacy, we dig it out of a box), and ECC (error-correcting, for people who are worried about bit flips and also about everything else). All types are physically identical. The type selection is mostly vibes."
+    },
+    {
+      q: "Is my data secure?",
+      a: "Your data is encrypted in transit using HTTPS. Once in our system it is stored in plaintext in a MySQL database that hasn't been updated since 2019. Our security posture is best described as 'hopeful'."
+    },
+    {
+      q: "What is the Swindon Pi?",
+      a: "Our third data centre. It is a Raspberry Pi 4 (4GB) running in a cupboard under the stairs in a semi-detached house in Swindon. It powers approximately 2% of our infrastructure and 100% of our character. It is frequently degraded."
+    },
+    {
+      q: "Can I get ECC RAM?",
+      a: "Yes, for an additional $50/GB/hr surcharge. ECC RAM corrects single-bit memory errors automatically. At our prices, the errors you're making are not the bit-flip kind."
+    },
+    {
+      q: "How fast is the RAM?",
+      a: "Very fast. Specific speeds are a trade secret. We can confirm it is faster than HDD, slower than CPU cache, and priced as if it were solid gold. DDR5 customers get a small certificate acknowledging that they chose the fast tier."
+    },
+    {
+      q: "What is your uptime SLA?",
+      a: "We target 99.2% uptime, which we describe as 'vibes-adjusted'. This means we aim for 99.2% but reserve the right to re-classify any downtime as 'scheduled maintenance (retroactive)'. We have never missed our SLA by our own accounting."
+    },
+    {
+      q: "Do you have a free tier?",
+      a: "No. We considered it and decided against it on the grounds that it would be even more absurd than what we currently offer, and we do have some standards."
+    },
+    {
+      q: "Can I rent RAM for someone else as a gift?",
+      a: "Yes. We recommend pairing it with a heartfelt note explaining why you thought this was appropriate. Suggested occasions: birthdays, apologies, corporate onboarding, or passive-aggressive gestures."
+    },
+    {
+      q: "Who are you people?",
+      a: "RentARAM Ltd was founded in 2026 by two people who thought it would be funny. It has since grown into a company with a CSS file, a shared JavaScript utility library, and at least five HTML pages. We consider this a significant achievement."
+    },
+  ];
+
+  const list = document.getElementById('faq-list');
+  faqs.forEach((f, i) => {
+    const div = document.createElement('div');
+    div.className = 'faq-item';
+    div.innerHTML = `
+      <button class="faq-q" onclick="toggle(${i})">
+        <span>${f.q}</span>
+        <span class="faq-arrow">›</span>
+      </button>
+      <div class="faq-a">${f.a}</div>
+    `;
+    list.appendChild(div);
+  });
+
+  function toggle(i) {
+    const items = document.querySelectorAll('.faq-item');
+    items[i].classList.toggle('open');
+  }
+</script>
+</body>
+</html>
