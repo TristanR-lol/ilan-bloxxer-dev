@@ -16,23 +16,23 @@ function toast(msg, duration = 3000) {
 
 // ── Active nav link ──
 document.addEventListener('DOMContentLoaded', () => {
-  const page = location.pathname.split('/').pop() || 'index.html';
+  const page = location.pathname;
   document.querySelectorAll('.nav-links a').forEach(a => {
-    if (a.getAttribute('href') === page) a.classList.add('active');
+    if (a.getAttribute('href') === page || a.getAttribute('href') === page + 'index.html') a.classList.add('active');
   });
 });
 
 // ── Shared nav HTML ──
 const NAV_HTML = `
 <nav>
-  <a href="index.html" class="logo">RENT<span>-A-</span>RAM</a>
+  <a href="/rent-a-ram/index.html" class="logo">RENT<span>-A-</span>RAM</a>
   <div class="nav-links">
-    <a href="index.html">HOME</a>
-    <a href="pricing.html">PRICING</a>
-    <a href="order.html">ORDER</a>
-    <a href="dashboard.html">DASHBOARD</a>
-    <a href="faq.html">FAQ</a>
-    <a href="contact.html">CONTACT</a>
+    <a href="/rent-a-ram/index.html">HOME</a>
+    <a href="/rent-a-ram/pricing.html">PRICING</a>
+    <a href="/rent-a-ram/order.html">ORDER</a>
+    <a href="/rent-a-ram/dashboard.html">DASHBOARD</a>
+    <a href="/rent-a-ram/faq.html">FAQ</a>
+    <a href="/rent-a-ram/contact.html">CONTACT</a>
   </div>
 </nav>`;
 
@@ -52,9 +52,9 @@ document.addEventListener('DOMContentLoaded', () => {
   if (footerEl) footerEl.outerHTML = FOOTER_HTML;
 
   // Re-run active link highlight after injection
-  const page = location.pathname.split('/').pop() || 'index.html';
+  const page = location.pathname;
   document.querySelectorAll('.nav-links a').forEach(a => {
-    if (a.getAttribute('href') === page) a.classList.add('active');
+    if (a.getAttribute('href') === page || a.getAttribute('href') === page + 'index.html') a.classList.add('active');
   });
 });
 
