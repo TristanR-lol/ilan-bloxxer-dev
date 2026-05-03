@@ -1,0 +1,538 @@
+
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Share+Tech+Mono&display=swap');
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  .site {
+    font-family: 'Share Tech Mono', monospace;
+    background: #0a0a0f;
+    color: #00ff88;
+    min-height: 100vh;
+    padding: 0;
+  }
+
+  .nav {
+    background: #0a0a0f;
+    border-bottom: 1px solid #00ff8833;
+    padding: 16px 32px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .logo {
+    font-family: 'Orbitron', monospace;
+    font-size: 22px;
+    font-weight: 900;
+    color: #00ff88;
+    letter-spacing: 2px;
+  }
+
+  .logo span { color: #ff4466; }
+
+  .nav-links {
+    display: flex;
+    gap: 24px;
+    font-size: 12px;
+    color: #00ff8888;
+  }
+
+  .hero {
+    text-align: center;
+    padding: 60px 32px 40px;
+    border-bottom: 1px solid #00ff8811;
+  }
+
+  .hero-badge {
+    display: inline-block;
+    background: #ff446622;
+    border: 1px solid #ff4466;
+    color: #ff4466;
+    font-size: 11px;
+    padding: 4px 12px;
+    border-radius: 2px;
+    margin-bottom: 20px;
+    letter-spacing: 2px;
+  }
+
+  .hero h1 {
+    font-family: 'Orbitron', monospace;
+    font-size: 42px;
+    font-weight: 900;
+    color: #00ff88;
+    line-height: 1.1;
+    margin-bottom: 12px;
+    text-shadow: 0 0 30px #00ff8844;
+  }
+
+  .hero h1 span { color: #ff4466; }
+
+  .hero p {
+    font-size: 14px;
+    color: #00ff8888;
+    max-width: 480px;
+    margin: 0 auto 8px;
+    line-height: 1.6;
+  }
+
+  .hero-price {
+    font-family: 'Orbitron', monospace;
+    font-size: 13px;
+    color: #ffcc00;
+    margin-top: 8px;
+  }
+
+  .calculator {
+    max-width: 600px;
+    margin: 40px auto;
+    padding: 0 24px;
+  }
+
+  .calc-card {
+    background: #0f0f1a;
+    border: 1px solid #00ff8833;
+    border-radius: 4px;
+    padding: 28px;
+  }
+
+  .calc-title {
+    font-family: 'Orbitron', monospace;
+    font-size: 13px;
+    color: #00ff88;
+    letter-spacing: 2px;
+    margin-bottom: 24px;
+    text-align: center;
+  }
+
+  .slider-row {
+    margin-bottom: 24px;
+  }
+
+  .slider-label {
+    display: flex;
+    justify-content: space-between;
+    font-size: 12px;
+    color: #00ff8888;
+    margin-bottom: 10px;
+  }
+
+  .slider-val {
+    font-family: 'Orbitron', monospace;
+    color: #00ff88;
+    font-size: 14px;
+  }
+
+  input[type=range] {
+    width: 100%;
+    accent-color: #00ff88;
+    height: 4px;
+  }
+
+  .presets {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 24px;
+    flex-wrap: wrap;
+  }
+
+  .preset-btn {
+    background: #0a0a0f;
+    border: 1px solid #00ff8833;
+    color: #00ff8888;
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 11px;
+    padding: 6px 12px;
+    border-radius: 2px;
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+
+  .preset-btn:hover {
+    border-color: #00ff88;
+    color: #00ff88;
+  }
+
+  .preset-btn.active {
+    background: #00ff8822;
+    border-color: #00ff88;
+    color: #00ff88;
+  }
+
+  .total-box {
+    background: #00ff8811;
+    border: 1px solid #00ff8844;
+    border-radius: 4px;
+    padding: 20px;
+    text-align: center;
+    margin-bottom: 16px;
+  }
+
+  .total-label {
+    font-size: 11px;
+    color: #00ff8877;
+    letter-spacing: 2px;
+    margin-bottom: 8px;
+  }
+
+  .total-amount {
+    font-family: 'Orbitron', monospace;
+    font-size: 36px;
+    font-weight: 900;
+    color: #00ff88;
+  }
+
+  .total-breakdown {
+    font-size: 11px;
+    color: #00ff8866;
+    margin-top: 6px;
+  }
+
+  .rent-btn {
+    width: 100%;
+    background: #00ff88;
+    color: #0a0a0f;
+    font-family: 'Orbitron', monospace;
+    font-size: 14px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    padding: 16px;
+    border: none;
+    border-radius: 2px;
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+
+  .rent-btn:hover {
+    background: #00ffaa;
+    transform: scale(1.01);
+  }
+
+  .rent-btn:active {
+    transform: scale(0.99);
+  }
+
+  .features {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1px;
+    background: #00ff8811;
+    border-top: 1px solid #00ff8811;
+    border-bottom: 1px solid #00ff8811;
+    margin: 40px 0 0;
+  }
+
+  .feat {
+    background: #0a0a0f;
+    padding: 24px 20px;
+    text-align: center;
+  }
+
+  .feat-icon {
+    font-size: 24px;
+    margin-bottom: 10px;
+    filter: hue-rotate(0deg);
+  }
+
+  .feat-title {
+    font-family: 'Orbitron', monospace;
+    font-size: 11px;
+    color: #00ff88;
+    letter-spacing: 1px;
+    margin-bottom: 6px;
+  }
+
+  .feat-desc {
+    font-size: 11px;
+    color: #00ff8855;
+    line-height: 1.5;
+  }
+
+  .plans {
+    max-width: 680px;
+    margin: 40px auto;
+    padding: 0 24px;
+  }
+
+  .plans-title {
+    font-family: 'Orbitron', monospace;
+    font-size: 13px;
+    color: #00ff88;
+    letter-spacing: 2px;
+    text-align: center;
+    margin-bottom: 20px;
+  }
+
+  .plan-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 8px;
+  }
+
+  .plan-card {
+    background: #0f0f1a;
+    border: 1px solid #00ff8822;
+    border-radius: 4px;
+    padding: 16px 12px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+
+  .plan-card:hover, .plan-card.hot {
+    border-color: #00ff88;
+    background: #00ff8811;
+  }
+
+  .plan-card.hot {
+    border-color: #ff4466;
+  }
+
+  .plan-hot-label {
+    font-size: 9px;
+    color: #ff4466;
+    letter-spacing: 2px;
+    margin-bottom: 6px;
+  }
+
+  .plan-gb {
+    font-family: 'Orbitron', monospace;
+    font-size: 20px;
+    font-weight: 900;
+    color: #00ff88;
+  }
+
+  .plan-unit { font-size: 11px; color: #00ff8866; }
+
+  .plan-price {
+    font-size: 12px;
+    color: #ffcc00;
+    margin-top: 6px;
+  }
+
+  .plan-joke {
+    font-size: 9px;
+    color: #00ff8844;
+    margin-top: 6px;
+    line-height: 1.4;
+  }
+
+  .footer {
+    text-align: center;
+    padding: 32px;
+    font-size: 10px;
+    color: #00ff8833;
+    border-top: 1px solid #00ff8811;
+    line-height: 2;
+  }
+
+  .toast {
+    position: fixed;
+    bottom: 24px;
+    left: 50%;
+    transform: translateX(-50%) translateY(80px);
+    background: #0f0f1a;
+    border: 1px solid #00ff88;
+    color: #00ff88;
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 12px;
+    padding: 12px 24px;
+    border-radius: 2px;
+    transition: transform 0.3s;
+    z-index: 999;
+    white-space: nowrap;
+  }
+
+  .toast.show {
+    transform: translateX(-50%) translateY(0);
+  }
+
+  .blink {
+    animation: blink 1.2s step-end infinite;
+  }
+
+  @keyframes blink {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0; }
+  }
+
+  .scanline {
+    pointer-events: none;
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: repeating-linear-gradient(
+      to bottom,
+      transparent 0px,
+      transparent 3px,
+      rgba(0,255,136,0.015) 3px,
+      rgba(0,255,136,0.015) 4px
+    );
+    z-index: 1000;
+  }
+</style>
+
+<div class="scanline"></div>
+<div class="site">
+
+  <nav class="nav">
+    <div class="logo">RENT<span>-A-</span>RAM</div>
+    <div class="nav-links">
+      <span>PRICING</span>
+      <span>DOCS</span>
+      <span>STATUS: <span style="color:#00ff88">ONLINE</span></span>
+    </div>
+  </nav>
+
+  <div class="hero">
+    <div class="hero-badge">WORLD'S PREMIER RAM RENTAL SERVICE</div>
+    <h1>Need Memory?<br><span>Rent It.</span></h1>
+    <p>Why buy RAM when you can rent it by the hour? Perfect for people who need to remember things temporarily.</p>
+    <div class="hero-price">$100 / GB / HOUR &nbsp;|&nbsp; 24/7 UPTIME*</div>
+  </div>
+
+  <div class="calculator">
+    <div class="calc-card">
+      <div class="calc-title">// RENTAL CALCULATOR</div>
+
+      <div class="slider-row">
+        <div class="slider-label">
+          <span>RAM amount</span>
+          <span class="slider-val" id="gb-label">8 GB</span>
+        </div>
+        <input type="range" min="1" max="128" value="8" step="1" id="gb-slider">
+      </div>
+
+      <div class="slider-row">
+        <div class="slider-label">
+          <span>Duration</span>
+          <span class="slider-val" id="hr-label">4 hours</span>
+        </div>
+        <input type="range" min="1" max="72" value="4" step="1" id="hr-slider">
+      </div>
+
+      <div style="font-size:11px;color:#00ff8866;margin-bottom:12px;letter-spacing:1px;">QUICK PRESETS</div>
+      <div class="presets">
+        <button class="preset-btn" onclick="setPreset(4,1)">4GB, 1hr</button>
+        <button class="preset-btn active" onclick="setPreset(8,4)">8GB, 4hr</button>
+        <button class="preset-btn" onclick="setPreset(16,8)">16GB, 8hr</button>
+        <button class="preset-btn" onclick="setPreset(32,24)">32GB, 1 day</button>
+        <button class="preset-btn" onclick="setPreset(128,72)">128GB, 3 days</button>
+      </div>
+
+      <div class="total-box">
+        <div class="total-label">TOTAL COST</div>
+        <div class="total-amount" id="total">$3,200</div>
+        <div class="total-breakdown" id="breakdown">8 GB × 4 hrs × $100/GB/hr</div>
+      </div>
+
+      <button class="rent-btn" onclick="handleRent()">RENT MY RAM NOW ↗</button>
+    </div>
+  </div>
+
+  <div class="features">
+    <div class="feat">
+      <div class="feat-icon">⚡</div>
+      <div class="feat-title">INSTANT ALLOCATION</div>
+      <div class="feat-desc">RAM is yours in milliseconds. We've never NOT delivered.</div>
+    </div>
+    <div class="feat">
+      <div class="feat-icon">🔒</div>
+      <div class="feat-title">FULLY ENCRYPTED</div>
+      <div class="feat-desc">Your temporary memories are safe with us. Probably.</div>
+    </div>
+    <div class="feat">
+      <div class="feat-icon">🧠</div>
+      <div class="feat-title">DDR5 AVAILABLE</div>
+      <div class="feat-desc">The fastest RAM money can needlessly rent.</div>
+    </div>
+  </div>
+
+  <div class="plans">
+    <div class="plans-title">// POPULAR PLANS</div>
+    <div class="plan-grid">
+      <div class="plan-card" onclick="setPreset(4,1)">
+        <div class="plan-gb">4</div>
+        <div class="plan-unit">GB</div>
+        <div class="plan-price">$400/hr</div>
+        <div class="plan-joke">Good for browsing 3 tabs</div>
+      </div>
+      <div class="plan-card hot" onclick="setPreset(16,8)">
+        <div class="plan-hot-label">POPULAR</div>
+        <div class="plan-gb">16</div>
+        <div class="plan-unit">GB</div>
+        <div class="plan-price">$1,600/hr</div>
+        <div class="plan-joke">Great for Chrome users</div>
+      </div>
+      <div class="plan-card" onclick="setPreset(32,24)">
+        <div class="plan-gb">32</div>
+        <div class="plan-unit">GB</div>
+        <div class="plan-price">$3,200/hr</div>
+        <div class="plan-joke">For very important emails</div>
+      </div>
+      <div class="plan-card" onclick="setPreset(128,72)">
+        <div class="plan-gb">128</div>
+        <div class="plan-unit">GB</div>
+        <div class="plan-price">$12,800/hr</div>
+        <div class="plan-joke">You have a problem</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="footer">
+    * uptime guarantee subject to vibes<br>
+    ** RAM is returned to pool after rental. We do wipe it. Mostly.<br>
+    *** RentARAM Ltd is not responsible for memory leaks, existential crises, or buyer's remorse.<br>
+    <span style="color:#00ff8855">© 2026 RentARAM Ltd. All rights reserved. No refunds. Ever.</span><br><br>
+    <span class="blink">_</span>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+  const gbSlider = document.getElementById('gb-slider');
+  const hrSlider = document.getElementById('hr-slider');
+  const gbLabel = document.getElementById('gb-label');
+  const hrLabel = document.getElementById('hr-label');
+  const total = document.getElementById('total');
+  const breakdown = document.getElementById('breakdown');
+
+  const jokes = [
+    "Processing your poor life choices...",
+    "RAM allocated! Please do not sneeze on it.",
+    "Transaction complete. RAM is warming up.",
+    "Nice. At this price, you could've bought actual RAM.",
+    "Order placed! Our intern is inserting the stick now.",
+    "Done! Delivery via TCP/IP. ETA: immediately.",
+    "Charged! Your bank called. They're concerned.",
+  ];
+
+  function update() {
+    const gb = parseInt(gbSlider.value);
+    const hr = parseInt(hrSlider.value);
+    gbLabel.textContent = gb + ' GB';
+    hrLabel.textContent = hr + (hr === 1 ? ' hour' : ' hours');
+    const cost = gb * hr * 100;
+    total.textContent = '$' + cost.toLocaleString();
+    breakdown.textContent = gb + ' GB × ' + hr + ' hr' + (hr>1?'s':'') + ' × $100/GB/hr';
+  }
+
+  function setPreset(gb, hr) {
+    gbSlider.value = gb;
+    hrSlider.value = hr;
+    document.querySelectorAll('.preset-btn').forEach(b => b.classList.remove('active'));
+    update();
+  }
+
+  function handleRent() {
+    const msg = jokes[Math.floor(Math.random() * jokes.length)];
+    const toast = document.getElementById('toast');
+    toast.textContent = msg;
+    toast.classList.add('show');
+    setTimeout(() => toast.classList.remove('show'), 3000);
+  }
+
+  gbSlider.addEventListener('input', update);
+  hrSlider.addEventListener('input', update);
+  update();
+</script>
