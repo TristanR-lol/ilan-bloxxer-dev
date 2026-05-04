@@ -19,8 +19,13 @@
     width: 100%;
     align-items: center;
     justify-content: center;
+    flex-direction: column;
 }
 
 h1, h2, h3, p, div, button, body {
     font-family: "ginto", sans-serif;
+}
+
+h1 {
+    font-size: 2vw;
 }
