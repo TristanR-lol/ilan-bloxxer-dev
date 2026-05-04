@@ -29,3 +29,49 @@ h1, h2, h3, p, div, button, body {
 h1 {
     font-size: 2vw;
 }
+
+#Projects {
+    display: flex;
+    border-radius: 2vh;
+    background-color: wheat;
+    border: black 5px solid;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+    align-items: flex-start;
+    align-content: flex-start;
+    overflow: auto;
+    padding: 1%;
+    box-sizing: border-box;
+    scrollbar-width: none;
+    width: 90%;
+    height: 80%;
+}
+
+#ProjectsTitle {
+    margin-top: 1%;
+    margin-left: 1%;
+    margin-right: 999%;
+    margin-bottom: 2%;
+}
+
+.Project {
+    aspect-ratio: 1 / 1;
+    height: 13vw;
+    width: 13vw;
+    padding: 2%;
+    margin: 2%;
+    box-sizing: border-box;
+    border-radius: 1vh;
+    border: none;
+    overflow: hidden;
+}
+
+.ContentIcon {
+    width: 75%;
+    border-radius: 1vh;
+}
+
+.ContentName {
+    margin-top: 2%;
+    font-size: 1.8vh;
+}
