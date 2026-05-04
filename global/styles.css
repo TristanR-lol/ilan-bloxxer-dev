@@ -20,3 +20,7 @@
     align-items: center;
     justify-content: center;
 }
+
+h1, h2, h3, p, div, button, body {
+    font-family: "ginto", sans-serif;
+}
