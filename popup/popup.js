@@ -3,4 +3,6 @@ let redirect = params.get("redirect") || "https://ilan.bloxxer.dev/";
 document.getElementById("Continue").addEventListener("click", function () {
     location.href = redirect + "?accepted=true";
 });
-document.getElementById("HBD").innerHTML=`${redirect}: Here Be Dragons!`;
+let SplicedRedirect = redirect.split("/")
+console.log(SplicedRedirect)
+document.getElementById("HBD").innerHTML=`${SplicedRedirect[2]}: Here Be Dragons!`;
