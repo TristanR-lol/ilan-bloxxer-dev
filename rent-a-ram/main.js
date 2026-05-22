@@ -1,9 +1,4 @@
 // RentARAM shared utilities
-let params = new URLSearchParams(document.location.search);
-let redirect = params.get("redirect") || "https://ilan.bloxxer.dev/";
-document.getElementById("Continue").addEventListener("click", function () {
-    location.href = redirect + "?accepted=true";
-});
 // ── Toast ──
 function toast(msg, duration = 3000) {
   let el = document.getElementById('toast');
