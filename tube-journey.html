@@ -1,0 +1,544 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Journey to City of London School</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg:           #f5f4f0;
+    --surface:      #ffffff;
+    --surface-2:    #f0ede8;
+    --border:       rgba(0,0,0,0.10);
+    --border-strong:rgba(0,0,0,0.18);
+    --text:         #1a1917;
+    --text-2:       #5a5854;
+    --text-3:       #9a9793;
+    --northern:     #1c1a1b;
+    --district:     #006b2b;
+    --ok-bg:        #eaf5ee;
+    --ok-text:      #1a5c30;
+    --warn-bg:      #fdf3e3;
+    --warn-text:    #7a4a0a;
+    --err-bg:       #fdeaea;
+    --err-text:     #7a1a1a;
+    --load-bg:      #f0ede8;
+    --load-text:    #5a5854;
+    --radius:       10px;
+    --radius-sm:    6px;
+    --font:         'DM Sans', sans-serif;
+    --font-mono:    'DM Mono', monospace;
+    --shadow:       0 1px 3px rgba(0,0,0,0.08), 0 1px 2px rgba(0,0,0,0.04);
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg:           #111110;
+      --surface:      #1c1b1a;
+      --surface-2:    #252422;
+      --border:       rgba(255,255,255,0.08);
+      --border-strong:rgba(255,255,255,0.15);
+      --text:         #f0ede8;
+      --text-2:       #a09d98;
+      --text-3:       #605d5a;
+      --ok-bg:        #0d2e17;
+      --ok-text:      #6dbb8a;
+      --warn-bg:      #2a1f0a;
+      --warn-text:    #e0a050;
+      --err-bg:       #2a0d0d;
+      --err-text:     #e07070;
+      --load-bg:      #252422;
+      --load-text:    #a09d98;
+      --shadow:       0 1px 3px rgba(0,0,0,0.3);
+    }
+  }
+
+  html, body { height: 100%; }
+  body {
+    font-family: var(--font);
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    padding: 2rem 1rem;
+  }
+
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    width: 100%;
+    max-width: 520px;
+    overflow: hidden;
+  }
+
+  /* ── Header ── */
+  .header {
+    padding: 1.25rem 1.5rem 1rem;
+    border-bottom: 1px solid var(--border);
+  }
+  .header-top {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 4px;
+  }
+  .tfl-roundel {
+    width: 28px; height: 28px;
+    background: #003688;
+    border-radius: 50%;
+    position: relative;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .tfl-roundel::after {
+    content: '';
+    position: absolute;
+    width: 32px; height: 7px;
+    background: #cc0000;
+    border-radius: 2px;
+  }
+  .header h1 { font-size: 16px; font-weight: 500; color: var(--text); }
+  .header p  { font-size: 12px; color: var(--text-3); font-family: var(--font-mono); }
+
+  /* ── Status bar ── */
+  .status-bar {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    padding: 9px 1.5rem;
+    font-size: 13px;
+    font-weight: 500;
+    border-bottom: 1px solid var(--border);
+    transition: background 0.3s, color 0.3s;
+  }
+  .status-bar.ok      { background: var(--ok-bg);   color: var(--ok-text);   }
+  .status-bar.warn    { background: var(--warn-bg);  color: var(--warn-text); }
+  .status-bar.err     { background: var(--err-bg);   color: var(--err-text);  }
+  .status-bar.loading { background: var(--load-bg);  color: var(--load-text); }
+  .status-right { margin-left: auto; display: flex; align-items: center; gap: 8px; font-size: 11px; font-weight: 400; opacity: 0.8; }
+  .refresh-btn {
+    background: none;
+    border: 1px solid currentColor;
+    border-radius: 99px;
+    padding: 2px 8px;
+    font-size: 11px;
+    cursor: pointer;
+    color: inherit;
+    font-family: var(--font);
+  }
+  .refresh-btn:hover { opacity: 0.7; }
+
+  /* ── Spinner ── */
+  .spinner {
+    display: inline-block;
+    width: 12px; height: 12px;
+    border: 2px solid currentColor;
+    border-top-color: transparent;
+    border-radius: 50%;
+    animation: spin 0.7s linear infinite;
+    flex-shrink: 0;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  /* ── Summary cards ── */
+  .route-section { padding: 1.25rem 1.5rem; }
+  .route-label {
+    font-size: 10px;
+    font-weight: 500;
+    color: var(--text-3);
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+    margin-bottom: 12px;
+    font-family: var(--font-mono);
+  }
+  .summary-cards {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+    margin-bottom: 1.5rem;
+  }
+  .stat-card {
+    background: var(--surface-2);
+    border-radius: var(--radius-sm);
+    padding: 10px 12px;
+  }
+  .stat-label { font-size: 11px; color: var(--text-3); margin-bottom: 3px; }
+  .stat-val   { font-size: 20px; font-weight: 500; color: var(--text); line-height: 1; }
+  .stat-unit  { font-size: 12px; font-weight: 400; color: var(--text-2); }
+  .disrupted  { color: var(--err-text) !important; }
+
+  /* ── Journey steps ── */
+  .journey-steps { display: flex; flex-direction: column; }
+  .step { display: flex; gap: 12px; }
+  .step-spine { display: flex; flex-direction: column; align-items: center; min-width: 28px; }
+  .step-dot {
+    width: 11px; height: 11px;
+    border-radius: 50%;
+    border: 2px solid;
+    flex-shrink: 0;
+    margin-top: 3px;
+  }
+  .step-line { width: 2px; flex: 1; min-height: 16px; margin: 3px 0; }
+  .step-content { padding-bottom: 14px; flex: 1; }
+  .step-name   { font-size: 13px; font-weight: 500; color: var(--text); }
+  .step-detail { font-size: 12px; color: var(--text-2); margin-top: 3px; line-height: 1.45; }
+  .step-pills  { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 6px; }
+  .pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 11px;
+    font-weight: 500;
+    padding: 3px 8px;
+    border-radius: 99px;
+    white-space: nowrap;
+  }
+  .pill-northern { background: #1c1a1b; color: #fff; }
+  .pill-district { background: #006b2b; color: #fff; }
+  .pill-walk     { background: var(--surface-2); color: var(--text-2); border: 1px solid var(--border-strong); }
+  .pill-warn     { background: var(--warn-bg); color: var(--warn-text); }
+
+  /* icons (inline SVG data URIs via pseudo, or just unicode) */
+  .icon { font-size: 12px; line-height: 1; }
+
+  /* ── Line status section ── */
+  .divider { height: 1px; background: var(--border); margin: 0; }
+  .line-status { padding: 1rem 1.5rem; display: flex; flex-direction: column; gap: 8px; }
+  .line-row { display: flex; align-items: center; gap: 10px; font-size: 13px; }
+  .line-dot { width: 9px; height: 9px; border-radius: 50%; flex-shrink: 0; }
+  .line-name { font-weight: 500; min-width: 80px; color: var(--text); }
+  .line-msg  { font-size: 12px; color: var(--text-2); flex: 1; }
+  .line-badge {
+    font-size: 11px;
+    padding: 2px 8px;
+    border-radius: 99px;
+    font-weight: 500;
+    white-space: nowrap;
+  }
+  .badge-ok   { background: var(--ok-bg);   color: var(--ok-text);   }
+  .badge-warn { background: var(--warn-bg);  color: var(--warn-text); }
+  .badge-err  { background: var(--err-bg);   color: var(--err-text);  }
+
+  /* ── Alt box ── */
+  .alt-box {
+    margin: 0 1.5rem 1rem;
+    padding: 12px;
+    background: var(--warn-bg);
+    border-radius: var(--radius-sm);
+    border: 1px solid rgba(122,74,10,0.2);
+    display: none;
+  }
+  .alt-box.visible { display: block; }
+  .alt-box h3 { font-size: 13px; font-weight: 500; color: var(--warn-text); margin-bottom: 8px; }
+  .alt-box p  { font-size: 12px; color: var(--warn-text); line-height: 1.5; margin-top: 6px; }
+  .alt-box a  { color: inherit; }
+  .alt-box .alt-divider { height: 1px; background: rgba(122,74,10,0.2); margin: 8px 0; }
+
+  /* ── Footer ── */
+  .footer {
+    padding: 10px 1.5rem 1.25rem;
+    font-size: 11px;
+    color: var(--text-3);
+    font-family: var(--font-mono);
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .footer a { color: inherit; }
+</style>
+</head>
+<body>
+<div class="card">
+
+  <div class="header">
+    <div class="header-top">
+      <div class="tfl-roundel" aria-hidden="true"></div>
+      <h1>Journey to City of London School</h1>
+    </div>
+    <p>82 Wood Vale, Muswell Hill N10 &rarr; Queen Victoria St, EC4V</p>
+  </div>
+
+  <div class="status-bar loading" id="status-bar">
+    <span class="spinner" id="status-spinner"></span>
+    <span id="status-text">Checking live line status&hellip;</span>
+    <div class="status-right">
+      <span id="last-updated"></span>
+      <button class="refresh-btn" onclick="fetchStatus()">&#8635; Refresh</button>
+    </div>
+  </div>
+
+  <div class="route-section">
+    <p class="route-label" id="route-label">Normal route</p>
+
+    <div class="summary-cards">
+      <div class="stat-card">
+        <div class="stat-label">Total time</div>
+        <div class="stat-val" id="total-time">55<span class="stat-unit"> min</span></div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Tube stops</div>
+        <div class="stat-val">9<span class="stat-unit"> stops</span></div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Walking</div>
+        <div class="stat-val">~14<span class="stat-unit"> min</span></div>
+      </div>
+    </div>
+
+    <div class="journey-steps">
+
+      <div class="step">
+        <div class="step-spine">
+          <div class="step-dot" style="border-color:#9a9793;background:var(--surface);"></div>
+          <div class="step-line" style="background:#9a9793;"></div>
+        </div>
+        <div class="step-content">
+          <div class="step-name">82 Wood Vale, N10</div>
+          <div class="step-detail">Walk south on Wood Vale, left onto Muswell Hill Rd to Highgate station entrance</div>
+          <div class="step-pills">
+            <span class="pill pill-walk">&#x1F6B6; Walk ~7 min &middot; 0.4 mi</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-spine">
+          <div class="step-dot" style="border-color:#1c1a1b;background:#1c1a1b;"></div>
+          <div class="step-line" style="background:#1c1a1b;"></div>
+        </div>
+        <div class="step-content">
+          <div class="step-name">Highgate station</div>
+          <div class="step-detail">Northern line (Bank branch) southbound. At Camden Town take the <strong>Bank</strong> branch &mdash; not Charing Cross.</div>
+          <div class="step-pills">
+            <span class="pill pill-northern">&#x25CF; Northern line &mdash; 7 stops &middot; ~20 min</span>
+            <span class="pill pill-warn" id="northern-warn" style="display:none;" aria-live="polite">
+              &#9888; <span id="northern-warn-text"></span>
+            </span>
+          </div>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-spine">
+          <div class="step-dot" style="border-color:#1c1a1b;background:#1c1a1b;"></div>
+          <div class="step-line" style="background:var(--border-strong);"></div>
+        </div>
+        <div class="step-content">
+          <div class="step-name">Cannon Street station</div>
+          <div class="step-detail">Alight Northern line. Follow signs to District / Circle line platforms.</div>
+          <div class="step-pills">
+            <span class="pill pill-walk">&#x21C5; Change platforms &middot; ~3 min</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-spine">
+          <div class="step-dot" style="border-color:#006b2b;background:#006b2b;"></div>
+          <div class="step-line" style="background:#006b2b;"></div>
+        </div>
+        <div class="step-content">
+          <div class="step-name">Cannon Street &rarr; Mansion House</div>
+          <div class="step-detail">District line westbound (toward Wimbledon / Richmond). One stop only.</div>
+          <div class="step-pills">
+            <span class="pill pill-district">&#x25CF; District line &mdash; 1 stop &middot; ~3 min</span>
+            <span class="pill pill-warn" id="district-warn" style="display:none;" aria-live="polite">
+              &#9888; <span id="district-warn-text"></span>
+            </span>
+          </div>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-spine">
+          <div class="step-dot" style="border-color:#9a9793;background:var(--surface);"></div>
+          <div class="step-line" style="background:#9a9793;"></div>
+        </div>
+        <div class="step-content">
+          <div class="step-name">Mansion House station</div>
+          <div class="step-detail">Exit onto Queen Victoria St, walk west ~0.2 mi to school.</div>
+          <div class="step-pills">
+            <span class="pill pill-walk">&#x1F6B6; Walk ~7 min &middot; 0.2 mi</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-spine">
+          <div class="step-dot" style="border-color:#003688;background:#003688;"></div>
+        </div>
+        <div class="step-content">
+          <div class="step-name">City of London School</div>
+          <div class="step-detail">Queen Victoria Street, EC4V 3AL</div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <div class="line-status">
+    <p class="route-label">Live line status</p>
+    <div class="line-row">
+      <div class="line-dot" style="background:#1c1a1b;"></div>
+      <span class="line-name">Northern</span>
+      <span class="line-msg" id="northern-msg">Checking&hellip;</span>
+      <span class="line-badge" id="northern-badge">&mdash;</span>
+    </div>
+    <div class="line-row">
+      <div class="line-dot" style="background:#006b2b;"></div>
+      <span class="line-name">District</span>
+      <span class="line-msg" id="district-msg">Checking&hellip;</span>
+      <span class="line-badge" id="district-badge">&mdash;</span>
+    </div>
+  </div>
+
+  <div class="alt-box" id="alt-box">
+    <h3>&#9888; Disruption detected &mdash; alternative routes</h3>
+    <p id="alt-northern" style="display:none;"><strong>Northern line affected:</strong> W7 bus from Muswell Hill Broadway to Finsbury Park, then bus 4 or 153 south toward Bank. Total ~75&ndash;90 min.</p>
+    <p id="alt-district" style="display:none;"><strong>District line affected:</strong> At Cannon Street, walk 8 min west along Cannon St / Queen Victoria St directly to school. Adds ~5 min.</p>
+    <p id="alt-both" style="display:none;"><strong>Both lines affected:</strong> W7 bus to Finsbury Park &rarr; Overground to Farringdon &rarr; walk 12 min to school. Total ~75 min. Or taxi ~&pound;14&ndash;20.</p>
+    <div class="alt-divider"></div>
+    <p>Check <a href="https://tfl.gov.uk/tube-dlr-overground/status/" target="_blank" rel="noopener">tfl.gov.uk/status</a> for real-time updates.</p>
+  </div>
+
+  <div class="footer">
+    &#9432; Live status via TfL API &middot; auto-refreshes every 60s &middot;
+    use <a href="https://citymapper.com" target="_blank" rel="noopener">Citymapper</a> for live departures
+  </div>
+
+</div>
+
+<script>
+  function badgeLabel(statusName) {
+    if (!statusName) return 'Unknown';
+    const s = statusName.toLowerCase();
+    if (s.includes('good') || s.includes('normal')) return 'Good service';
+    if (s.includes('strike'))   return 'Strike';
+    if (s.includes('suspend'))  return 'Suspended';
+    if (s.includes('severe'))   return 'Severe delays';
+    if (s.includes('minor'))    return 'Minor delays';
+    if (s.includes('part'))     return 'Part closure';
+    return statusName;
+  }
+
+  function isDisrupted(statusName) {
+    if (!statusName) return false;
+    const s = statusName.toLowerCase();
+    return !(s.includes('good') || s.includes('normal'));
+  }
+
+  function severityClass(statusName) {
+    if (!statusName) return 'badge-warn';
+    const s = statusName.toLowerCase();
+    if (s.includes('good') || s.includes('normal')) return 'badge-ok';
+    if (s.includes('minor')) return 'badge-warn';
+    return 'badge-err';
+  }
+
+  async function fetchStatus() {
+    const bar     = document.getElementById('status-bar');
+    const spinner = document.getElementById('status-spinner');
+    const statusText = document.getElementById('status-text');
+
+    bar.className = 'status-bar loading';
+    spinner.style.display = 'inline-block';
+    statusText.textContent = 'Checking live line status\u2026';
+
+    let data;
+    try {
+      const res = await fetch('https://api.tfl.gov.uk/Line/northern,district/Status');
+      if (!res.ok) throw new Error('HTTP ' + res.status);
+      data = await res.json();
+    } catch (e) {
+      spinner.style.display = 'none';
+      statusText.textContent = 'Could not reach TfL API \u2014 check tfl.gov.uk manually';
+      return;
+    }
+
+    spinner.style.display = 'none';
+
+    let northernOk = true, districtOk = true;
+
+    data.forEach(line => {
+      const primary   = (line.lineStatuses || [])[0] || {};
+      const statusName = primary.statusSeverityDescription || 'Unknown';
+      const reason    = primary.reason || '';
+      const shortMsg  = reason ? reason.replace(/^.*?:/, '').trim().split('.')[0] : statusName;
+      const disrupted = isDisrupted(statusName);
+      const label     = badgeLabel(statusName);
+      const bClass    = severityClass(statusName);
+
+      if (line.id === 'northern') {
+        northernOk = !disrupted;
+        document.getElementById('northern-msg').textContent = shortMsg;
+        const badge = document.getElementById('northern-badge');
+        badge.textContent  = label;
+        badge.className    = 'line-badge ' + bClass;
+        const warn = document.getElementById('northern-warn');
+        if (disrupted) {
+          warn.style.display = 'inline-flex';
+          document.getElementById('northern-warn-text').textContent = label;
+          document.getElementById('total-time').innerHTML = '<span class="disrupted">~75</span><span class="stat-unit"> min</span>';
+        } else {
+          warn.style.display = 'none';
+        }
+      }
+
+      if (line.id === 'district') {
+        districtOk = !disrupted;
+        document.getElementById('district-msg').textContent = shortMsg;
+        const badge = document.getElementById('district-badge');
+        badge.textContent  = label;
+        badge.className    = 'line-badge ' + bClass;
+        const warn = document.getElementById('district-warn');
+        if (disrupted) {
+          warn.style.display = 'inline-flex';
+          document.getElementById('district-warn-text').textContent = label;
+        } else {
+          warn.style.display = 'none';
+        }
+      }
+    });
+
+    const altBox  = document.getElementById('alt-box');
+    const bothBad = !northernOk && !districtOk;
+    document.getElementById('alt-both').style.display     = bothBad ? 'block' : 'none';
+    document.getElementById('alt-northern').style.display = (!northernOk && districtOk) ? 'block' : 'none';
+    document.getElementById('alt-district').style.display = (northernOk && !districtOk)  ? 'block' : 'none';
+
+    if (!northernOk || !districtOk) {
+      altBox.classList.add('visible');
+      bar.className = 'status-bar warn';
+      statusText.textContent = 'Disruption on ' + (bothBad ? 'Northern and District lines' : !northernOk ? 'Northern line' : 'District line');
+      document.getElementById('route-label').textContent = 'Route \u2014 disruption active';
+    } else {
+      altBox.classList.remove('visible');
+      bar.className = 'status-bar ok';
+      statusText.textContent = 'Good service on Northern and District lines';
+      document.getElementById('route-label').textContent = 'Normal route';
+      document.getElementById('total-time').innerHTML = '55<span class="stat-unit"> min</span>';
+    }
+
+    const now = new Date();
+    document.getElementById('last-updated').textContent =
+      'Updated ' + now.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' });
+  }
+
+  fetchStatus();
+  setInterval(fetchStatus, 60000);
+</script>
+</body>
+</html>
