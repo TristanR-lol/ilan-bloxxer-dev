@@ -1,27 +1,317 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <link href="global/styles.css" rel="stylesheet">
-    <link rel="preload" href="https://www.dropbox.com/scl/fi/2azzhtiumtebfqt2hafgo/ginto.woff2?rlkey=vfr6d88f6ims1wxuuz9fotv9y&st=y3exmluo&raw=1" as="font" type="font/woff2" crossorigin="anonymous" nonce="">
-    <script src="main.js" defer></script>
-    <script src="https://ilan.bloxxer.dev/global/redirect.js"></script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TUBE-ROUTE — N10 to City of London School</title>
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <div id="Topbar">
-        <h3 id="Title">ilan.bloxxer.dev</h1>
-    </div>
-    <div id="Content">
-        <h1>Welcome to Ilan.Bloxxer.Dev</h1>
-        <h1>I am the best in the universe</h1>
-        <div id="Projects">
-            <h1 id="ProjectsTitle">Projects</h1>
 
-            <button onclick="location.href='https://ilan.bloxxer.dev/rent-a-ram'" class="Project">
-                <img class="ContentIcon" src="https://ilan.bloxxer.dev/rent-a-ram/favicon.png">
-                <p class="ContentName">Rent A Ram!</p>
-            </button>
-        </div>
+<div id="cursor-outer"></div>
+<div id="cursor-inner"></div>
+
+<!-- ── NAV ── -->
+<nav>
+  <span class="logo">TUBE<span>-ROUTE</span></span>
+  <div class="nav-right">
+    <a href="https://tfl.gov.uk/tube-dlr-overground/status/" target="_blank" rel="noopener">TFL STATUS</a>
+    <a href="https://citymapper.com" target="_blank" rel="noopener">CITYMAPPER</a>
+  </div>
+</nav>
+
+<!-- ── LIVE STATUS BAR ── -->
+<div class="status-bar loading" id="status-bar">
+  <span class="spinner" id="status-spinner"></span>
+  <span id="status-text">PINGING TFL SYSTEMS...</span>
+  <div class="bar-right">
+    <span id="last-updated"></span>
+    <button class="refresh-btn" onclick="fetchStatus()">↻ REFRESH</button>
+  </div>
+</div>
+
+<!-- ── HERO ── -->
+<div class="hero">
+  <div class="badge">LIVE JOURNEY PLANNER</div>
+  <h1>N10 to <span>City.</span></h1>
+  <p>82 Wood Vale, Muswell Hill → City of London School, Queen Victoria St EC4V.<br>
+     Northern line + District line. Auto-updates every 60 seconds.</p>
+  <div class="hero-sub" id="route-label">// LOADING ROUTE STATUS...</div>
+</div>
+
+<!-- ── METRICS ── -->
+<div class="metrics">
+  <div class="metric">
+    <div id="total-time">
+      <div class="metric-val">55</div>
+      <div class="metric-label">MINUTES</div>
     </div>
+  </div>
+  <div class="metric">
+    <div class="metric-val">9</div>
+    <div class="metric-label">TUBE STOPS</div>
+  </div>
+  <div class="metric">
+    <div class="metric-val yellow">~14</div>
+    <div class="metric-label">MINS WALKING</div>
+  </div>
+  <div class="metric">
+    <div class="metric-val">2</div>
+    <div class="metric-label">LINES USED</div>
+  </div>
+</div>
+
+<!-- ── MAIN CONTENT ── -->
+<div class="page-wide">
+
+  <div class="grid-2" style="margin-top:48px; align-items:start; gap:24px;">
+
+    <!-- ── LEFT: Journey steps ── -->
+    <div>
+      <div class="section-title" style="text-align:left; margin-bottom:24px;">STEP-BY-STEP ROUTE</div>
+
+      <div class="card">
+        <div class="journey">
+
+          <!-- 1: Start -->
+          <div class="step">
+            <div class="spine">
+              <div class="dot" style="border-color:var(--text-mid); background:var(--bg);"></div>
+              <div class="line" style="background:var(--text-dim);"></div>
+            </div>
+            <div class="step-body">
+              <div class="step-name">82 WOOD VALE, N10</div>
+              <div class="step-detail">Walk south on Wood Vale, left onto Muswell Hill Rd. Continue down to Highgate station entrance on Archway Rd.</div>
+              <span class="pill pill-walk">🚶 WALK ~7 MIN · 0.4 MI</span>
+            </div>
+          </div>
+
+          <!-- 2: Highgate -->
+          <div class="step">
+            <div class="spine">
+              <div class="dot" style="border-color:#1c1a1b; background:#1c1a1b;"></div>
+              <div class="line" style="background:#1c1a1b;"></div>
+            </div>
+            <div class="step-body">
+              <div class="step-name">
+                HIGHGATE STATION
+                <span class="pill pill-warn" id="northern-warn" style="display:none; margin-left:8px; vertical-align:middle;">
+                  ⚠ <span id="northern-warn-text"></span>
+                </span>
+              </div>
+              <div class="step-detail">
+                Board <strong style="color:var(--green);">Northern line</strong> southbound — Bank branch.
+                At Camden Town keep RIGHT for Bank. Do NOT take the Charing Cross branch.
+              </div>
+              <span class="pill pill-northern">● NORTHERN LINE — 7 STOPS · ~20 MIN</span>
+            </div>
+          </div>
+
+          <!-- 3: Cannon Street -->
+          <div class="step">
+            <div class="spine">
+              <div class="dot" style="border-color:#1c1a1b; background:#1c1a1b;"></div>
+              <div class="line" style="background:var(--border2);"></div>
+            </div>
+            <div class="step-body">
+              <div class="step-name">CANNON STREET STATION</div>
+              <div class="step-detail">
+                Alight Northern line. Follow signs to District / Circle line platforms.
+                Change is step-free and takes approx 3 minutes.
+              </div>
+              <span class="pill pill-walk">⇅ CHANGE PLATFORMS · ~3 MIN</span>
+            </div>
+          </div>
+
+          <!-- 4: District -->
+          <div class="step">
+            <div class="spine">
+              <div class="dot" style="border-color:#007229; background:#007229;"></div>
+              <div class="line" style="background:#007229;"></div>
+            </div>
+            <div class="step-body">
+              <div class="step-name">
+                CANNON ST → MANSION HOUSE
+                <span class="pill pill-warn" id="district-warn" style="display:none; margin-left:8px; vertical-align:middle;">
+                  ⚠ <span id="district-warn-text"></span>
+                </span>
+              </div>
+              <div class="step-detail">
+                <strong style="color:#00d45a;">District line</strong> westbound toward Wimbledon / Richmond.
+                One stop only — get off at Mansion House.
+              </div>
+              <span class="pill pill-district">● DISTRICT LINE — 1 STOP · ~3 MIN</span>
+            </div>
+          </div>
+
+          <!-- 5: Walk -->
+          <div class="step">
+            <div class="spine">
+              <div class="dot" style="border-color:var(--text-mid); background:var(--bg);"></div>
+              <div class="line" style="background:var(--text-dim);"></div>
+            </div>
+            <div class="step-body">
+              <div class="step-name">MANSION HOUSE STATION</div>
+              <div class="step-detail">
+                Exit onto Queen Victoria Street. Walk west approximately 0.2 miles.
+                School is on the left, just past Godliman Street.
+              </div>
+              <span class="pill pill-walk">🚶 WALK ~7 MIN · 0.2 MI</span>
+            </div>
+          </div>
+
+          <!-- 6: Destination -->
+          <div class="step">
+            <div class="spine">
+              <div class="dot" style="border-color:var(--red); background:var(--red);"></div>
+            </div>
+            <div class="step-body">
+              <div class="step-name" style="color:var(--red);">CITY OF LONDON SCHOOL</div>
+              <div class="step-detail">Queen Victoria Street, EC4V 3AL</div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- Disruption alt routes -->
+      <div class="alt-box" id="alt-box" style="margin-top:16px;">
+        <h3>⚠ DISRUPTION DETECTED — ALTERNATIVE ROUTES</h3>
+
+        <p id="alt-northern" style="display:none;">
+          <span class="hl-yellow">NORTHERN LINE AFFECTED //</span><br>
+          W7 bus from Muswell Hill Broadway → Finsbury Park, then bus 4 or 153 south toward Bank.
+          Total: ~75–90 min.
+        </p>
+
+        <p id="alt-district" style="display:none;">
+          <span class="hl-yellow">DISTRICT LINE AFFECTED //</span><br>
+          At Cannon Street, exit and walk west along Cannon St / Queen Victoria St directly to school.
+          Adds approx 5 minutes. No tube needed for this leg.
+        </p>
+
+        <p id="alt-both" style="display:none;">
+          <span class="hl-yellow">BOTH LINES AFFECTED //</span><br>
+          W7 bus to Finsbury Park → London Overground to Farringdon → walk 12 min to school.
+          Total: ~75 min. Alternatively: Uber/taxi ~£14–20 peak.
+        </p>
+
+        <div class="alt-divider"></div>
+        <p>Check <a href="https://tfl.gov.uk/tube-dlr-overground/status/" target="_blank" rel="noopener">tfl.gov.uk/status</a> for real-time service updates.</p>
+      </div>
+    </div>
+
+    <!-- ── RIGHT: Status + info ── -->
+    <div style="display:flex; flex-direction:column; gap:16px;">
+
+      <!-- Live line status -->
+      <div class="card">
+        <div class="card-title">LIVE LINE STATUS</div>
+        <div class="line-row">
+          <div class="line-dot" style="background:#1c1a1b; border:1px solid #555;"></div>
+          <span class="line-name">NORTHERN</span>
+          <span class="line-msg" id="northern-msg">CHECKING...</span>
+          <span class="status" id="northern-badge">—</span>
+        </div>
+        <div class="line-row">
+          <div class="line-dot" style="background:#007229;"></div>
+          <span class="line-name">DISTRICT</span>
+          <span class="line-msg" id="district-msg">CHECKING...</span>
+          <span class="status" id="district-badge">—</span>
+        </div>
+        <div style="margin-top:14px; font-size:10px; color:var(--text-dim); line-height:1.9;">
+          * Auto-refreshes every 60 seconds via TfL API.<br>
+          * Status reflects real-time broadcast from TfL.
+        </div>
+      </div>
+
+      <!-- Walking breakdown -->
+      <div class="card">
+        <div class="card-title">WALKING BREAKDOWN</div>
+        <div style="font-size:12px; color:var(--text-mid); line-height:2.4;">
+          <div style="display:flex; justify-content:space-between;">
+            <span>82 Wood Vale → Highgate</span>
+            <span class="hl">~7 min</span>
+          </div>
+          <div style="display:flex; justify-content:space-between;">
+            <span>Mansion House → School</span>
+            <span class="hl">~7 min</span>
+          </div>
+          <div style="display:flex; justify-content:space-between; border-top:1px solid var(--border); padding-top:8px; margin-top:4px;">
+            <span class="dim">TOTAL WALKING</span>
+            <span class="hl-yellow mono">~14 MIN</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Camden Town warning -->
+      <div class="card" style="border-color:rgba(255,204,0,0.3);">
+        <div class="card-title" style="color:var(--yellow);">⚠ CAMDEN TOWN SPLIT</div>
+        <p style="font-size:12px; color:rgba(255,204,0,0.75); line-height:1.8;">
+          At Camden Town the Northern line splits. Southbound trains alternate between
+          the <strong style="color:var(--green);">Bank branch</strong> and Charing Cross branch.<br><br>
+          You need the <strong style="color:var(--green);">BANK branch</strong>.
+          Platform indicators show which branch each train serves.
+          Wrong branch adds ~10 min.
+        </p>
+      </div>
+
+      <!-- Quick facts -->
+      <div class="card">
+        <div class="card-title">ROUTE FACTS</div>
+        <div style="font-size:11px; color:var(--text-mid); line-height:2.4;">
+          <div style="display:flex; justify-content:space-between;">
+            <span class="dim">HIGHGATE ZONE</span>
+            <span>3</span>
+          </div>
+          <div style="display:flex; justify-content:space-between;">
+            <span class="dim">CANNON ST ZONE</span>
+            <span>1</span>
+          </div>
+          <div style="display:flex; justify-content:space-between;">
+            <span class="dim">MANSION HOUSE ZONE</span>
+            <span>1</span>
+          </div>
+          <div style="display:flex; justify-content:space-between;">
+            <span class="dim">OYSTER / CONTACTLESS</span>
+            <span class="hl">YES</span>
+          </div>
+          <div style="display:flex; justify-content:space-between;">
+            <span class="dim">STEP-FREE ROUTE</span>
+            <span class="hl-yellow">PARTIAL</span>
+          </div>
+          <div style="display:flex; justify-content:space-between; border-top:1px solid var(--border); padding-top:8px; margin-top:4px;">
+            <span class="dim">PEAK TRAVELCARD</span>
+            <span class="hl">Z1–3</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Strike note -->
+      <div class="card" style="border-color:rgba(255,68,102,0.3);">
+        <div class="card-title" style="color:var(--red);">STRIKE PROTOCOL</div>
+        <p style="font-size:11px; color:rgba(255,68,102,0.75); line-height:1.8;">
+          TfL typically announces strikes 2 weeks in advance via
+          <a href="https://tfl.gov.uk" style="color:var(--red);">tfl.gov.uk</a>.
+          On strike days, plan for buses (see alt routes above) or budget ~45 min extra.
+          The W7 and 43 buses serve Muswell Hill during strike action.
+        </p>
+      </div>
+
+    </div>
+  </div>
+
+</div>
+
+<!-- ── FOOTER ── -->
+<footer>
+  * journey times are estimates and subject to service conditions<br>
+  ** always validate with Citymapper or the TfL app before travel<br>
+  *** status data sourced directly from the TfL Unified API<br>
+  TUBE-ROUTE &nbsp;|&nbsp; N10 TO EC4V &nbsp;|&nbsp; <span class="blink">_</span>
+</footer>
+
+<div id="toast"></div>
+<script src="main.js"></script>
 </body>
 </html>
